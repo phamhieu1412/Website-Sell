@@ -1,0 +1,112 @@
+header > a {
+  color: #000000 !important;
+}
+.ant-layout-header {
+  height: 50px;
+  line-height: 32px;
+}
+
+div > a {
+  padding: 5px 10px;
+  font-size: 16px;
+  color: #000000;
+  &:active {
+    color: #1890ff;
+  }
+}
+
+.page-title {
+  a {
+    text-transform: uppercase;
+  }
+  position: sticky;
+  top: 0;
+  padding: 15px 0px;
+  background: #ffffff;
+  z-index: 1;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-bottom: 30px;
+}
+
+.ant-layout-footer {
+  text-align: left;
+  padding-left: 100px;
+  padding-right: 100px;
+  div > a {
+    display: block;
+    color: #000000;
+    padding: 5px;
+    text-align: left;
+  }
+}
+
+.payment {
+  img {
+    padding: 10px;
+  }
+}
+
+#wrap {
+  margin: 0px 10px;
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  width: 20px;
+  float: right;
+  padding: 0;
+  position: relative;
+}
+
+#search {
+  height: 40px;
+  font-size: 20px;
+  display: inline-block;
+  font-family: "Lato";
+  font-weight: 100;
+  border: none;
+  outline: none;
+  color: #555;
+  padding: 3px;
+  padding-right: 30px;
+  width: 0px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  z-index: 3;
+  transition: width 0.4s cubic-bezier(0, 0.795, 0, 1);
+  cursor: pointer;
+}
+
+#search:focus:hover {
+  border-bottom: 1px solid #bbb;
+}
+
+#search:focus {
+  width: 400px;
+  z-index: 1;
+  border-bottom: 1px solid #bbb;
+  cursor: text;
+}
+#search_submit {
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+  color: red;
+  float: right;
+  //background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADNQTFRFU1NT9fX1lJSUXl5e1dXVfn5+c3Nz6urqv7+/tLS0iYmJqampn5+fysrK39/faWlp////Vi4ZywAAABF0Uk5T/////////////////////wAlrZliAAABLklEQVR42rSWWRbDIAhFHeOUtN3/ags1zaA4cHrKZ8JFRHwoXkwTvwGP1Qo0bYObAPwiLmbNAHBWFBZlD9j0JxflDViIObNHG/Do8PRHTJk0TezAhv7qloK0JJEBh+F8+U/hopIELOWfiZUCDOZD1RADOQKA75oq4cvVkcT+OdHnqqpQCITWAjnWVgGQUWz12lJuGwGoaWgBKzRVBcCypgUkOAoWgBX/L0CmxN40u6xwcIJ1cOzWYDffp3axsQOyvdkXiH9FKRFwPRHYZUaXMgPLeiW7QhbDRciyLXJaKheCuLbiVoqx1DVRyH26yb0hsuoOFEPsoz+BVE0MRlZNjGZcRQyHYkmMp2hBTIzdkzCTc/pLqOnBrk7/yZdAOq/q5NPBH1f7x7fGP4C3AAMAQrhzX9zhcGsAAAAASUVORK5CYII=) center center no-repeat;
+  background: url(https://www.wikihow.com/images/thumb/e/ea/Macspotlight.png/30px-Macspotlight.png)
+    center center no-repeat;
+  text-indent: -10000px;
+  border: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+}

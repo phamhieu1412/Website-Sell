@@ -1,0 +1,58 @@
+
+/* card-product-item in productcart.js in actionPage in page*/
+
+/* .card-product-item {
+    width: 200px;
+    height: auto;
+    border: 1px solid;
+    padding: 10px;
+    margin-bottom: 20PX;
+}
+.card-product-item .price {
+    color: red;
+}
+.card-product-item .selled {
+    float: right;
+}
+
+.section .waves-effect.waves-light {
+    font-size: 65%;
+}
+
+.nav-fixed {
+    position: fixed;
+    z-index: 90;
+    width: 100%;
+} */
+.section .product-table tbody:first-child {
+    background-color: #acacac;
+}
+.section .product-table tr th {
+    font-size: 1.2em;
+    text-align: center;
+    vertical-align: middle;
+}
+.section .product-table tr .center-on-small-only {
+    text-align: center;
+}
+.section .product-table tr td span {
+    color:red;
+    font-size: 18px;
+    padding: 10px;
+    font-weight: 600;
+} 
+.section .product-table tr td h6 {
+    font-size: 16px;
+    color: red;
+    font-weight: 700;
+    text-align: center;   
+}
+.section .product-table tbody .th-2 {
+    width: 40%;
+}
+
+@media (max-width: 768px) {
+    .section .product-table tbody .th-2 {
+        width: 20%;
+    }
+}
