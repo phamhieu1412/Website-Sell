@@ -15,62 +15,50 @@ class Footer extends Component {
         <div className="container">
           <div className="row">
             <div className="col-3 col-md-6">
-              <h3 className="footer-head">Products</h3>
+              <h3 className="footer-head">Chính sách</h3>
               <ul className="menu">
                 <li>
-                  <a href="#">Help center</a>
+                  <a href="#">Chất lượng sản phẩm</a>
                 </li>
                 <li>
-                  <a href="#">Contact us</a>
+                  <a href="#">Chính sách bảo hàng</a>
                 </li>
                 <li>
-                  <a href="#">product help</a>
+                  <a href="#">Chính sách đổi trả</a>
                 </li>
                 <li>
-                  <a href="#">warranty</a>
-                </li>
-                <li>
-                  <a href="#">order status</a>
+                  <a href="#">Chính sách khui hộp sản phẩm</a>
                 </li>
               </ul>
             </div>
             <div className="col-3 col-md-6">
-              <h3 className="footer-head">services</h3>
+              <h3 className="footer-head">Dịch vụ</h3>
               <ul className="menu">
                 <li>
-                  <a href="#">Help center</a>
+                  <a href="#">Chất lượng dịch vụ</a>
                 </li>
                 <li>
-                  <a href="#">Contact us</a>
+                  <a href="#">Hướng dẫn mua hàng online</a>
                 </li>
                 <li>
-                  <a href="#">product help</a>
+                  <a href="#">Tìm hiểu về mua trả góp</a>
                 </li>
                 <li>
-                  <a href="#">warranty</a>
+                  <a href="#">Giao hàng & Thanh toán</a>
                 </li>
                 <li>
-                  <a href="#">order status</a>
+                  <a href="#">Cảnh báo giả mạo</a>
                 </li>
               </ul>
             </div>
             <div className="col-3 col-md-6">
-              <h3 className="footer-head">support</h3>
+              <h3 className="footer-head">Hỗ trợ</h3>
               <ul className="menu">
                 <li>
-                  <a href="#">Help center</a>
+                  <a href="#">Chính sách khiếu nại</a>
                 </li>
                 <li>
-                  <a href="#">Contact us</a>
-                </li>
-                <li>
-                  <a href="#">product help</a>
-                </li>
-                <li>
-                  <a href="#">warranty</a>
-                </li>
-                <li>
-                  <a href="#">order status</a>
+                  <a href="#">Góp ý khiếu nại</a>
                 </li>
               </ul>
             </div>
@@ -101,8 +89,8 @@ class Footer extends Component {
                 </ul>
               </div>
               <div className="subscribe">
-                <input type="email" placeholder="ENTER YOUR EMAIL" />
-                <button>subscribe</button>
+                <input type="email" placeholder="Nhập email để được ..." />
+                <button>Đăng ký</button>
               </div>
             </div>
           </div>

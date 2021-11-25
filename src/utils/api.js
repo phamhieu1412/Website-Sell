@@ -38,6 +38,7 @@ export const apiCall = async ({ endPoint, method, payload, headers, params }) =>
   } catch (e) {
     return {
       response: null,
+      status: e.request.status,
       error: e.request,
     };
   }

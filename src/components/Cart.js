@@ -8,7 +8,7 @@ export default class Cart extends Component {
           <table className="table product-table">
             <tbody>
               <tr>
-                <th />
+                <th>Ảnh</th>
                 <th className="th-2">Sản Phẩm</th>
                 <th>Giá</th>
                 <th>Số Lượng</th>

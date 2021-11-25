@@ -157,6 +157,180 @@
   }
 }
 
+
+._2_JugQ {
+  width: 80%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-left: 1.25rem;
+
+  ._2bdFDW {
+    align-items: center;
+    display: flex;
+
+    ._3S9myJ {
+      font-size: 0.875rem;
+      color: #333;
+    }
+    ._2CLMxo {
+      border: 0;
+      outline: none;
+      background: none;
+      color: #05a;
+      font-size: 0.8125rem;
+      text-transform: capitalize;
+      text-decoration: underline;
+      padding: 0 6px;
+    }
+  }
+
+  .input-with-validator-wrapper {
+    .input-with-validator {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      position: relative;
+      border-radius: 2px;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      color: #222;
+      height: 40px;
+      padding: 10px;
+      transition: border-color 0.1s ease;
+
+      input {
+        flex: 1;
+        font-size: 14px;
+        background: transparent;
+        outline: none;
+        box-shadow: none;
+        border: 0;
+      }
+    }
+  }
+
+  ._119wWy {
+    .stardust-radio-group {
+      display: flex;
+
+      .stardust-radio.stardust-radio--checked {
+        padding: 0;
+        margin-right: 0.75rem;
+        font-weight: 400;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.87);
+        display: flex;
+        cursor: pointer;
+        .stardust-radio-button.stardust-radio-button--checked {
+          margin-right: 8px;
+          flex-shrink: 0;
+          position: relative;
+          width: 18px;
+          height: 18px;
+          .stardust-radio-button__outer-circle {
+            border-color: #ee4d2d;
+            width: 18px;
+            height: 18px;
+            border-radius: 100%;
+            border: 2px solid rgba(0, 0, 0, 0.26);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            .stardust-radio-button__inner-circle {
+              width: 6px;
+              height: 6px;
+              border-radius: 100%;
+              background: #ee4d2d;
+            }
+          }
+        }
+      }
+      .stardust-radio {
+        padding: 0;
+        margin-right: 0.75rem;
+        font-weight: 400;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.87);
+        display: flex;
+        cursor: pointer;
+        .stardust-radio-button {
+          margin-right: 8px;
+          flex-shrink: 0;
+          position: relative;
+          width: 18px;
+          height: 18px;
+          .stardust-radio-button__outer-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 100%;
+            border: 2px solid rgba(0, 0, 0, 0.26);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            .stardust-radio-button__inner-circle {
+              width: 6px;
+              height: 6px;
+              border-radius: 100%;
+              background: #ee4d2d;
+              opacity: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ._2w5iZe {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .shopee-dropdown.shopee-dropdown--has-selected {
+      width: 32%;
+      display: flex;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      .shopee-dropdown__entry.shopee-dropdown__entry--selected {
+        width: 100%;
+        color: rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border: 1px solid rgba(0, 0, 0, 0.09);
+        border-radius: 2px;
+        height: 2.5rem;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        user-select: none;
+        padding: 0 0.9375rem;
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          flex: 1;
+        }
+        .shopee-svg-icon.icon-arrow-down {
+          margin-left: 0.3125rem;
+          font-size: 0.75rem;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+          fill: currentColor;
+          position: relative;
+        }
+      }
+    }
+  }
+}
+
 // .modal {
 
   .modal-voucher {

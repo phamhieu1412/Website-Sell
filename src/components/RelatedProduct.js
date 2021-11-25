@@ -1,141 +1,63 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
-import "../css/SlideProductCss.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import image4 from "../assets/images/JBLHorizon_001_dvHAMaster.png";
+import { numberToVnd, toShortString1 } from "../utils/numberFormatter";
+import { actions as productsActions } from "../redux/productsRedux";
 
 const RelatedProduct = (props) => {
+  const dispatch = useDispatch();
+  const productsReducer = useSelector((state) => state.productsReducer);
+  const { listProductsRelated } = productsReducer;
+  const history = useHistory();
+
   return (
-    <div class="box">
-      <div class="box-header">related products</div>
+    <div className="box">
+      <div className="box-header">Sản phẩm liên quan</div>
 
       {/* list related product */}
-      <div class="row" id="related-products">
-        <div class="col-4 col-md-6 col-sm-12">
-          <div class="product-card">
-            <div class="product-card-img">
-              <img src={image4} alt="" />
-              <img src={image4} alt="" />
-            </div>
-            <div class="product-card-info">
-              <div class="product-btn">
-                <a
-                  href="./product-detail.html"
-                  class="btn-flat btn-hover btn-shop-now"
-                >
-                  shop now
-                </a>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-cart-add"></i>
-                </button>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-heart"></i>
-                </button>
-              </div>
-              <div class="product-card-name">name</div>
-              <div class="product-card-price">
-                <span>
-                  <del>300</del>
-                </span>
-                <span class="curr-price">200</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4 col-md-6 col-sm-12">
-          <div class="product-card">
-            <div class="product-card-img">
-              <img src={image4} alt="" />
-              <img src={image4} alt="" />
-            </div>
-            <div class="product-card-info">
-              <div class="product-btn">
-                <a
-                  href="./product-detail.html"
-                  class="btn-flat btn-hover btn-shop-now"
-                >
-                  shop now
-                </a>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-cart-add"></i>
-                </button>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-heart"></i>
-                </button>
-              </div>
-              <div class="product-card-name">name</div>
-              <div class="product-card-price">
-                <span>
-                  <del>300</del>
-                </span>
-                <span class="curr-price">200</span>
+      <div className="row" id="related-products">
+        {listProductsRelated &&
+          listProductsRelated.map((item) => (
+            <div key={item.id} className="col-3 col-md-6 col-sm-12">
+              <div className="product-card">
+                <div className="product-card-img">
+                  <img src={item.avatar_url} alt="" />
+                  <img src={item.avatar_url} alt="" />
+                </div>
+                <div className="product-card-info">
+                  <div className="product-btn">
+                    <a
+                      className="btn-flat btn-hover btn-shop-now"
+                      onClick={() => {
+                        history.push(`/detail/${item.link_seo}/${item.id}`);
+                        dispatch(productsActions.getDetailProduct(item.id));
+                      }}
+                    >
+                      Xem ngay
+                    </a>
+                    <button className="btn-flat btn-hover btn-cart-add">
+                      <i className="bx bxs-cart-add"></i>
+                    </button>
+                    <button className="btn-flat btn-hover btn-cart-add">
+                      <i className="bx bxs-heart"></i>
+                    </button>
+                  </div>
+                  <div className="product-card-name">
+                    {toShortString1(item.name, 18)}
+                  </div>
+                  <div className="product-card-price">
+                    <span>
+                      <del>{numberToVnd(item.price)}</del>
+                    </span>
+                    <span className="curr-price">
+                      {numberToVnd(item.final_price)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-4 col-md-6 col-sm-12">
-          <div class="product-card">
-            <div class="product-card-img">
-              <img src={image4} alt="" />
-              <img src={image4} alt="" />
-            </div>
-            <div class="product-card-info">
-              <div class="product-btn">
-                <a
-                  href="./product-detail.html"
-                  class="btn-flat btn-hover btn-shop-now"
-                >
-                  shop now
-                </a>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-cart-add"></i>
-                </button>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-heart"></i>
-                </button>
-              </div>
-              <div class="product-card-name">name</div>
-              <div class="product-card-price">
-                <span>
-                  <del>300</del>
-                </span>
-                <span class="curr-price">200</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4 col-md-6 col-sm-12">
-          <div class="product-card">
-            <div class="product-card-img">
-              <img src={image4} alt="" />
-              <img src={image4} alt="" />
-            </div>
-            <div class="product-card-info">
-              <div class="product-btn">
-                <a
-                  href="./product-detail.html"
-                  class="btn-flat btn-hover btn-shop-now"
-                >
-                  shop now
-                </a>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-cart-add"></i>
-                </button>
-                <button class="btn-flat btn-hover btn-cart-add">
-                  <i class="bx bxs-heart"></i>
-                </button>
-              </div>
-              <div class="product-card-name">name</div>
-              <div class="product-card-price">
-                <span>
-                  <del>300</del>
-                </span>
-                <span class="curr-price">200</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          ))}
       </div>
     </div>
   );

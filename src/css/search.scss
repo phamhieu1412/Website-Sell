@@ -1,0 +1,33 @@
+.search-product-page {
+  .box-product-search-page {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  .box-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+}
+
+.box-header-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 60px 0 0px;
+
+  .params-filter-select {
+    button.ant-btn.ant-dropdown-trigger {
+      border: 1px solid #c5c5c5;
+      color: black;
+      margin-left: 15px;
+    }
+
+    button.ant-btn.ant-dropdown-trigger:hover {
+      border: 1px solid var(--red);
+      color: var(--red);
+    }
+  }
+}

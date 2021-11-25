@@ -1,169 +1,194 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
-import Slider from "react-slick";
-import { useSelector, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { ToastContainer } from "react-toastify";
 
 import "../css/SlideProductCss.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import image4 from "../assets/images/JBLHorizon_001_dvHAMaster.png";
 import AppFooter from "../layout/Footer";
 import AppHeader from "../layout/Header";
 import ReviewsProduct from "../components/ReviewsProduct";
 import RelatedProduct from "../components/RelatedProduct";
+import {
+  numberToVnd,
+  notificationToast,
+  successNotificationToast,
+} from "../utils/numberFormatter";
+import { actions as productsActions } from "../redux/productsRedux";
+import { actions as cartActions } from "../redux/cartRedux";
 
 const DetailProductPage = (props) => {
+  const dispatch = useDispatch();
+  const productsReducer = useSelector((state) => state.productsReducer);
+  const { detailProduct } = productsReducer;
+  const [quantity, setQuantity] = useState(1);
+  const history = useHistory();
+
+  useEffect(() => {
+    const url = `${window.location.href}`;
+    const id = url.substr(url.lastIndexOf("/") + 1, url.length);
+    dispatch(productsActions.getDetailProduct(id));
+  }, []);
+
+  const onChangeQuantity = (type) => {
+    if (type === "asc") {
+      setQuantity(quantity + 1);
+    } else if (type === "desc" && quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const addToCart = (id, inventory) => {
+    if (inventory === 0) {
+      notificationToast("Không có đủ hàng");
+      return;
+    }
+    if (inventory < quantity) {
+      notificationToast("Không được đặt quá số lượng hàng còn lại trong kho");
+      return;
+    }
+    dispatch(
+      cartActions.addToCart(
+        {
+          product_id: id,
+          quantity: quantity,
+        },
+        {
+          onSuccess: () => {
+            successNotificationToast("Thêm sản phẩm vào giỏ thành công");
+          },
+          onFailure: (textError) => {
+            notificationToast("Thêm sản phẩm vào giỏ thất bại");
+          },
+        }
+      )
+    );
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <AppHeader />
+      <AppHeader history={history} />
 
-      <div class="bg-main">
-        <div class="container">
-          <div class="box">
-            <div class="breadcumb">
-              <a href="./index.html">home</a>
-              <span>
-                <i class="bx bxs-chevrons-right"></i>
-              </span>
-              <a href="./products.html">all products</a>
-              <span>
-                <i class="bx bxs-chevrons-right"></i>
-              </span>
-              <a href="./product-detail.html">JBL Tune 750TNC</a>
-            </div>
-          </div>
-          <div class="row product-row">
-            <div class="col-5 col-md-12">
-              <div class="product-img" id="product-img">
-                <img
-                  src="./images/kisspng-beats-electronics-headphones-apple-beats-studio-red-headphones.png"
-                  alt=""
-                />
+      <div className="bg-main">
+        {detailProduct.id && (
+          <div className="container">
+            <div className="box" style={{ marginTop: "20px" }}>
+              <div className="breadcumb">
+                <a href="./index.html">home</a>
+                <span>
+                  <i className="bx bxs-chevrons-right"></i>
+                </span>
+                <a href="./products.html">all products</a>
+                <span>
+                  <i className="bx bxs-chevrons-right"></i>
+                </span>
+                <p>{detailProduct.name}</p>
               </div>
-              <div class="box">
-                <div class="product-img-list">
-                  <div class="product-img-item">
-                    <img
-                      src="./images/kisspng-beats-electronics-headphones-apple-beats-studio-red-headphones.png"
-                      alt=""
-                    />
-                  </div>
-                  <div class="product-img-item">
-                    <img
-                      src="./images/JBL-Endurance-Sprint_Alt_Red-1605x1605px.webp"
-                      alt=""
-                    />
-                  </div>
-                  <div class="product-img-item">
-                    <img
-                      src="./images/JBL_Quantum_400_Product Image_Hero 02.png"
-                      alt=""
-                    />
+            </div>
+            <div className="row product-row">
+              <div className="col-5 col-md-12">
+                <div className="product-img" id="product-img">
+                  <img src={detailProduct.avatar_url} alt="" />
+                </div>
+                <div className="box">
+                  <div className="product-img-list">
+                    {detailProduct.images.map((i, index) => (
+                      <div key={index} className="product-img-item">
+                        <img src={i} alt="" />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-7 col-md-12">
-              <div class="product-info">
-                <h1>JBL TUNE 750TNC</h1>
-                <div class="product-info-detail">
-                  <span class="product-info-detail-title">Brand:</span>
-                  <a href="#">JBL</a>
-                </div>
-                <div class="product-info-detail">
-                  <span class="product-info-detail-title">Rated:</span>
-                  <span class="rating">
-                    <i class="bx bxs-star"></i>
-                    <i class="bx bxs-star"></i>
-                    <i class="bx bxs-star"></i>
-                    <i class="bx bxs-star"></i>
-                    <i class="bx bxs-star"></i>
-                  </span>
-                </div>
-                <p class="product-description">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo
-                  libero alias officiis dolore doloremque eveniet culpa
-                  dignissimos, itaque, cum animi excepturi sed veritatis
-                  asperiores soluta, nisi atque quae illum. Ipsum.
-                </p>
-                <div class="product-info-price">$2345</div>
-                <div class="product-quantity-wrapper">
-                  <span class="product-quantity-btn">
-                    <i class="bx bx-minus"></i>
-                  </span>
-                  <span class="product-quantity">1</span>
-                  <span class="product-quantity-btn">
-                    <i class="bx bx-plus"></i>
-                  </span>
-                </div>
-                <div>
-                  <button class="btn-flat btn-hover">add to cart</button>
+              <div className="col-7 col-md-12">
+                <div className="product-info">
+                  <h1>{detailProduct.name}</h1>
+                  <div className="product-info-detail">
+                    <span className="product-info-detail-title">Lượt xem:</span>
+                    <p>{detailProduct.views} lượt</p>
+                  </div>
+                  <div className="product-info-detail">
+                    <span className="product-info-detail-title">Thể loại:</span>
+                    <p>{detailProduct.category.name}</p>
+                  </div>
+                  <div className="product-info-detail">
+                    <span className="product-info-detail-title">
+                      Đánh giá:{" "}
+                    </span>
+                    <span className="rating">
+                      <i className="bx bxs-star"></i>
+                      <i className="bx bxs-star"></i>
+                      <i className="bx bxs-star"></i>
+                      <i className="bx bxs-star"></i>
+                      <i className="bx bxs-star"></i>
+                    </span>
+                  </div>
+                  <div className="product-info-detail">
+                    <span className="product-info-detail-title">
+                      {detailProduct.inventory_number} sản phẩm có sẵn
+                    </span>
+                  </div>
+                  <p className="product-description">
+                    {detailProduct.specification}
+                  </p>
+                  <div className="product-info-price">
+                    {numberToVnd(detailProduct.final_price)}
+                  </div>
+                  <div className="product-quantity-wrapper">
+                    <span
+                      className="product-quantity-btn"
+                      onClick={() => onChangeQuantity("desc")}
+                    >
+                      <i className="bx bx-minus"></i>
+                    </span>
+                    <span className="product-quantity">{quantity}</span>
+                    <span
+                      className="product-quantity-btn"
+                      onClick={() => onChangeQuantity("asc")}
+                    >
+                      <i className="bx bx-plus"></i>
+                    </span>
+                  </div>
+                  <div>
+                    <button
+                      className="btn-flat btn-hover"
+                      onClick={() =>
+                        addToCart(
+                          detailProduct.id,
+                          detailProduct.inventory_number
+                        )
+                      }
+                    >
+                      Thêm vào giỏ
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="box">
-            <div class="box-header">description</div>
-            <div class="product-detail-description">
-              <button
-                class="btn-flat btn-hover btn-view-description"
-                id="view-all-description"
-              >
-                view all
-              </button>
-              <div class="product-detail-description-content">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Impedit laudantium obcaecati odit dolorem, doloremque
-                  accusamus esse neque ipsa dignissimos saepe quisquam tempore
-                  perferendis deserunt sapiente! Recusandae illum totam earum
-                  ratione. Lorem ipsum dolor sit, amet consectetur adipisicing
-                  elit. Aliquam incidunt maxime rerum reprehenderit voluptas
-                  asperiores ipsam quas consequuntur maiores, at odit obcaecati
-                  vero sunt! Reiciendis aperiam perferendis consequuntur odio
-                  quas. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Ut quaerat eum veniam doloremque nihil repudiandae odio
-                  ratione culpa libero tempora. Expedita, quo molestias. Minus
-                  illo quis dignissimos aliquid sapiente error!
-                </p>
-                <img
-                  src="./images/JBL_Quantum_400_Product Image_Hero 02.png"
-                  alt=""
-                />
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-                  accusantium officia, quae fuga in exercitationem aliquam
-                  labore ex doloribus repellendus beatae facilis ipsam.
-                  Veritatis vero obcaecati iste atque aspernatur ducimus. Lorem
-                  ipsum dolor sit, amet consectetur adipisicing elit. Repellat
-                  quam praesentium id sit amet magnam ad, dolorum, cumque iste
-                  optio itaque expedita eius similique, ab adipisci dicta. Quod,
-                  quibusdam quas. Lorem ipsum dolor sit amet consectetur
-                  adipisicing elit. Odit, in corrupti ipsam sint error possimus
-                  commodi incidunt suscipit sit voluptatum quibusdam enim
-                  eligendi animi deserunt recusandae earum natus voluptas
-                  blanditiis?
-                </p>
-                <img
-                  src="./images/kisspng-beats-electronics-headphones-apple-beats-studio-red-headphones.png"
-                  alt=""
-                />
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
-                  ullam quam fugit veniam ipsum recusandae incidunt, ex ratione,
-                  magnam labore ad tenetur officia! In, totam. Molestias
-                  sapiente deserunt animi porro?
-                </p>
+            <div className="box">
+              <div className="box-header">Mô tả</div>
+              <div className="product-detail-description">
+                <div className="product-detail-description-content">
+                  <p>{detailProduct.description}</p>
+                </div>
               </div>
             </div>
+            <div className="box">
+              <div className="box-header">Hướng dẫn sử dụng</div>
+              <div className="product-detail-description">
+                <div className="product-detail-description-content">
+                  <a href={detailProduct.user_manual}>{detailProduct.name}</a>
+                </div>
+              </div>
+            </div>
+
+            <ReviewsProduct reviews={detailProduct.product_reviews} />
+
+            <RelatedProduct />
           </div>
-
-          <ReviewsProduct />
-
-          <RelatedProduct />
-        </div>
+        )}
       </div>
 
+      <ToastContainer />
       <AppFooter />
     </Layout>
   );

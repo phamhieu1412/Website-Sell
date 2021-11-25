@@ -1,161 +1,104 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
-import Slider from "react-slick";
-import { useSelector, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Pagination } from "antd";
+import { useHistory } from "react-router";
 
-import "../css/SlideProductCss.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import image4 from "../assets/images/JBLHorizon_001_dvHAMaster.png";
+import "../css/search.scss";
+import { numberToVnd, toShortString } from "../utils/numberFormatter";
+import { actions as productsActions } from "../redux/productsRedux";
+import Loading from "../components/Loading";
 
 const ProductsAfterFilter = (props) => {
+  const dispatch = useDispatch();
+  const productsReducer = useSelector((state) => state.productsReducer);
+  const history = useHistory();
+  const { listProducts, meta, isFetching } = productsReducer;
+
+  const onChangePage = (current, pageSize) => {
+    dispatch(
+      productsActions.getProductsByFilters({
+        page: current,
+        page_size: pageSize,
+      })
+    );
+  };
+
   return (
-    <div class="col-9 col-md-12">
-      <div class="box filter-toggle-box">
-        <button class="btn-flat btn-hover" id="filter-toggle">
+    <div className="col-10 col-md-12 search-product-page">
+      <div className="box filter-toggle-box">
+        <button className="btn-flat btn-hover" id="filter-toggle">
           filter
         </button>
       </div>
-      <div class="box">
+      <div>
         {/* list product after filter */}
-        <div class="row" id="products">
-          <div class="col-4 col-md-6 col-sm-12">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src={image4} alt="" />
-                <img src={image4} alt="" />
-              </div>
-              <div class="product-card-info">
-                <div class="product-btn">
-                  <a
-                    href="./product-detail.html"
-                    class="btn-flat btn-hover btn-shop-now"
-                  >
-                    shop now
-                  </a>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-cart-add"></i>
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-heart"></i>
-                  </button>
+        <div className="row" id="products">
+          {!isFetching ? (
+            listProducts.map((item) => (
+              <div key={item.id} className="col-3 col-md-6 col-sm-12">
+                <div className="product-card">
+                  <div className="product-card-img">
+                    <img src={item.avatar_url} alt="" />
+                    <img src={item.avatar_url} alt="" />
+                  </div>
+                  <div className="product-card-info">
+                    <div className="product-btn">
+                      <button
+                        className="btn-flat btn-hover btn-shop-now"
+                        onClick={() => {
+                          history.push(`/detail/${item.link_seo}/${item.id}`);
+                          dispatch(productsActions.getDetailProduct(item.id));
+                        }}
+                      >
+                        Xem ngay
+                      </button>
+                      <button className="btn-flat btn-hover btn-cart-add">
+                        <i className="bx bxs-cart-add"></i>
+                      </button>
+                      <button className="btn-flat btn-hover btn-cart-add">
+                        <i className="bx bxs-heart"></i>
+                      </button>
+                    </div>
+                    <div className="product-card-name">
+                      {toShortString(item.name)}
+                    </div>
+                    <div className="product-card-price">
+                      <span>
+                        <del>{numberToVnd(item.price)}</del>
+                      </span>
+                      <span className="curr-price">
+                        {numberToVnd(item.final_price)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="product-card-name">name sp</div>
-                <div class="product-card-price">
-                  <span>
-                    <del>300</del>
-                  </span>
-                  <span class="curr-price">200</span>
-                </div>
               </div>
+            ))
+          ) : (
+            <div className="box-product-search-page">
+              <Loading />
             </div>
-          </div>
-          <div class="col-4 col-md-6 col-sm-12">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src={image4} alt="" />
-                <img src={image4} alt="" />
-              </div>
-              <div class="product-card-info">
-                <div class="product-btn">
-                  <a
-                    href="./product-detail.html"
-                    class="btn-flat btn-hover btn-shop-now"
-                  >
-                    shop now
-                  </a>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-cart-add"></i>
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-heart"></i>
-                  </button>
-                </div>
-                <div class="product-card-name">name sp</div>
-                <div class="product-card-price">
-                  <span>
-                    <del>300</del>
-                  </span>
-                  <span class="curr-price">200</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-4 col-md-6 col-sm-12">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src={image4} alt="" />
-                <img src={image4} alt="" />
-              </div>
-              <div class="product-card-info">
-                <div class="product-btn">
-                  <a
-                    href="./product-detail.html"
-                    class="btn-flat btn-hover btn-shop-now"
-                  >
-                    shop now
-                  </a>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-cart-add"></i>
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-heart"></i>
-                  </button>
-                </div>
-                <div class="product-card-name">name sp</div>
-                <div class="product-card-price">
-                  <span>
-                    <del>300</del>
-                  </span>
-                  <span class="curr-price">200</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-4 col-md-6 col-sm-12">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src={image4} alt="" />
-                <img src={image4} alt="" />
-              </div>
-              <div class="product-card-info">
-                <div class="product-btn">
-                  <a
-                    href="./product-detail.html"
-                    class="btn-flat btn-hover btn-shop-now"
-                  >
-                    shop now
-                  </a>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-cart-add"></i>
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-heart"></i>
-                  </button>
-                </div>
-                <div class="product-card-name">name sp</div>
-                <div class="product-card-price">
-                  <span>
-                    <del>300</del>
-                  </span>
-                  <span class="curr-price">200</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-
       {/* Pagination */}
-      <div class="box">
-        <ul class="pagination">
+      <div className="box-pagination">
+        <Pagination
+          total={meta.totalItem}
+          current={meta.page}
+          pageSize={meta.pageSize}
+          size="default"
+          showSizeChanger={false}
+          onChange={onChangePage}
+        />
+        {/* <ul className="pagination">
           <li>
             <a href="#">
-              <i class="bx bxs-chevron-left"></i>
+              <i className="bx bxs-chevron-left"></i>
             </a>
           </li>
           <li>
-            <a href="#" class="active">
+            <a href="#" className="active">
               1
             </a>
           </li>
@@ -173,10 +116,10 @@ const ProductsAfterFilter = (props) => {
           </li>
           <li>
             <a href="#">
-              <i class="bx bxs-chevron-right"></i>
+              <i className="bx bxs-chevron-right"></i>
             </a>
           </li>
-        </ul>
+        </ul> */}
       </div>
     </div>
   );

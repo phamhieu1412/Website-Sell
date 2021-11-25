@@ -1,98 +1,133 @@
-import { UserOutlined, DownOutlined } from '@ant-design/icons';
-import { Col, Row, Button, Layout, Table, Input, Tabs, notification, Modal, Avatar, Dropdown, Menu } from 'antd';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { Table, Input, Tabs, notification, Popover, Radio } from "antd";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
-import AppFooter from '../layout/Footer';
-import '../css/checkout.scss';
-import Voucher from '../assets/images/voucher';
-import VoucherEmpty from '../assets/images/voucherEmpty';
-import { numberToVnd } from '../utils/numberFormatter';
-import { actions as cartActions } from '../../redux/cartRedux';
-import { actions as authActions } from '../../redux/authRedux';
-import { actions as couponActions } from '../../redux/couponRedux';
-import PayWithPayPal from '../components/PayWithPayPal';
-import VoucherItem from '../components/VoucherItem';
+import AppHeader from "../layout/Header";
+import AppFooter from "../layout/Footer";
+import Loading from "../components/Loading";
+import "../css/checkout.scss";
+import {
+  numberToVnd,
+  notificationToast,
+  successNotificationToast,
+} from "../utils/numberFormatter";
+import { actions as cartActions } from "../redux/cartRedux";
+import { actions as authActions } from "../redux/authRedux";
+import PayWithPayPal from "../components/PayWithPayPal";
 
 const { TabPane } = Tabs;
-const { Header } = Layout;
 const columns = [
   {
-    title: () => <div style={{ fontSize: '16px', fontWeight: 'bold' }}>Sản phẩm</div>,
-    dataIndex: 'name',
-    key: 'name',
+    title: () => (
+      <div
+        style={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
+      >
+        Sản phẩm
+      </div>
+    ),
+    dataIndex: "name",
+    key: "name",
     render: (value, record) => (
-      <div style={{ fontSize: '16px', display: 'flex' }}>
-        <img src={record.thumbnail_url} style={{ height: '50px', width: '50px', objectFit: 'cover' }} />
-        <div style={{ fontSize: '16px', fontWeight: '500', marginLeft: '10px' }}>{record.product_title}</div>
+      <div style={{ fontSize: "16px", display: "flex" }}>
+        <img
+          src={record.product.avatar_url}
+          style={{ height: "50px", width: "50px", objectFit: "cover" }}
+        />
+        <div
+          style={{ fontSize: "16px", fontWeight: "500", marginLeft: "10px" }}
+        >
+          {record.product.name}
+        </div>
       </div>
     ),
   },
   {
-    title: () => <div style={{ fontSize: '15px', opacity: 0.5 }}>Đơn giá</div>,
-    dataIndex: 'price',
-    key: 'price',
-    align: 'right',
+    title: () => (
+      <div style={{ fontSize: "15px", fontWeight: "bold" }}>Đơn giá</div>
+    ),
+    dataIndex: "price",
+    key: "price",
+    align: "right",
     render: (value, record) => (
-      <div style={{ fontSize: '16px' }}>
-        <span style={{ textDecoration: 'line-through', marginRight: '7px' }}>{numberToVnd(record.product_price)}</span>
-        {numberToVnd(record.product_price - record.product_discount)}
+      <div style={{ fontSize: "16px" }}>
+        <span style={{ textDecoration: "line-through", marginRight: "7px" }}>
+          {numberToVnd(record.product.price)}
+        </span>
+        <span style={{ fontWeight: "bold" }}>
+          {numberToVnd(record.product.final_price)}
+        </span>
       </div>
     ),
   },
   {
-    title: () => <div style={{ fontSize: '15px', opacity: 0.5 }}>Số lượng</div>,
-    dataIndex: 'quantity',
-    key: 'quantity',
-    align: 'right',
-    render: (value, record) => <div style={{ fontSize: '16px' }}>{value}</div>,
+    title: () => (
+      <div style={{ fontSize: "15px", fontWeight: "bold" }}>Số lượng</div>
+    ),
+    dataIndex: "quantity",
+    key: "quantity",
+    align: "right",
+    render: (value, record) => <div style={{ fontSize: "16px" }}>{value}</div>,
   },
   {
-    title: () => <div style={{ fontSize: '15px', opacity: 0.5 }}>Thành tiền</div>,
-    key: 'total',
-    dataIndex: 'total',
-    align: 'right',
+    title: () => (
+      <div style={{ fontSize: "15px", fontWeight: "bold" }}>Thành tiền</div>
+    ),
+    key: "total",
+    dataIndex: "total",
+    align: "right",
     render: (value, record) => (
-      <div style={{ fontSize: '16px' }}>
-        {numberToVnd((record.product_price - record.product_discount) * record.quantity)}
+      <div style={{ fontSize: "16px" }}>
+        {numberToVnd(record.product.final_price * record.quantity)}
       </div>
     ),
   },
 ];
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-        Thông tin tài khoản
-      </a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="1">Đăng xuất</Menu.Item>
-  </Menu>
-);
 
 class Checkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tabPayment: '1',
-      note: '',
+      tabPayment: "1",
+      note: "",
       isVisibleVoucher: false,
       couponId: null,
       isLogin: false,
+      deliveryId: 1,
+      infoCheckout: {
+        note: "",
+        delivery_method: 1,
+        order_products: [],
+        order_delivery_address: {
+          full_name: "",
+          phone: "",
+          address: "",
+          province: "",
+          district: "",
+          ward: "",
+        },
+        order_vat_invoice: {
+          company_name: "",
+          tax_identification_number: "",
+          company_address: "",
+        },
+      },
+      companyName: "",
+      tax: "",
+      companyAddress: "",
+      isBLock: false,
     };
   }
 
   componentDidMount() {
-    const { getCart, history, getAddressUser } = this.props;
+    const { getCart, history } = this.props;
 
     getCart({
       onSuccess: () => {
-        getAddressUser();
         this.setState({ isLogin: true });
       },
       onFailure: () => {
-        history.push('/login');
+        history.push("/login");
         this.setState({ isLogin: false });
       },
     });
@@ -103,32 +138,49 @@ class Checkout extends Component {
   };
 
   onCheckout = () => {
-    const { checkout, defaultAddress, history } = this.props;
-    const { note } = this.state;
+    this.setState({ isBLock: true });
+    const { checkout, userDetail, history, productsInCart } = this.props;
+    const { note, companyName, tax, companyAddress, deliveryId } = this.state;
+    let tempArrayProducts = [];
+    for (let i = 0; i < productsInCart.length; i++) {
+      tempArrayProducts.push({
+        product_id: productsInCart[i].product_id,
+        quantity: productsInCart[i].quantity,
+      });
+    }
 
-    if (defaultAddress.id) {
+    if (userDetail.id) {
       checkout(
         {
-          address_id: defaultAddress.id,
-          content: note,
+          note: note,
+          delivery_method: deliveryId,
+          order_products: tempArrayProducts,
+          order_delivery_address: {
+            full_name: userDetail.full_name,
+            phone: userDetail.phone,
+            address: userDetail.address,
+            province: userDetail.province,
+            district: userDetail.district,
+            ward: userDetail.ward,
+          },
+          order_vat_invoice: {
+            company_name: companyName,
+            tax_identification_number: tax,
+            company_address: companyAddress,
+          },
         },
         {
           onSuccess: () => {
-            notification.open({
-              message: 'Thành công',
-              description: 'Mua hàng thành công',
-              type: 'success',
-            });
-            history.push('/home');
+            successNotificationToast("Mua hàng thành công");
+            setTimeout(() => {
+              history.push("/account/profile");
+            }, 3000);
           },
-          onFailure: () => {
-            notification.open({
-              message: 'Lỗi',
-              description: 'Mua hàng thất bại.Vui lòng thử lại.',
-              type: 'error',
-            });
+          onFailure: (text) => {
+            this.setState({ isBLock: false });
+            notificationToast(text);
           },
-        },
+        }
       );
     }
   };
@@ -137,187 +189,216 @@ class Checkout extends Component {
     this.setState({ note: event.target.value });
   };
 
-  onChangeCoupon = (event) => {
-    this.setState({ couponId: event.target.value });
+  onChangeMethodDelivery = (e) => {
+    this.setState({ deliveryId: e.target.value });
   };
 
-  getDetailCoupon = () => {
-    const { getDetailCoupon } = this.props;
-    const { couponId } = this.state;
+  onChangeCompanyName = (e) => {
+    this.setState({ companyName: e.target.value });
+  };
+  onChangeCompanyTax = (e) => {
+    this.setState({ tax: e.target.value });
+  };
+  onChangeCompanyAddress = (e) => {
+    this.setState({ companyAddress: e.target.value });
+  };
 
-    getDetailCoupon(couponId, {
-      onSuccess: () => {
-        notification.open({
-          message: 'Thành công',
-          description: 'Mã giảm giá có thể sử dụng',
-          type: 'success',
-        });
-      },
-      onFailure: () => {
-        notification.open({
-          message: 'Lỗi',
-          description: 'Mã giảm giá không đúng.Vui lòng thử lại.',
-          type: 'error',
-        });
-      },
-    });
+  renderChooseMethodDelivery = () => {
+    const { deliveryId } = this.state;
+
+    return (
+      <div>
+        <Radio.Group
+          onChange={this.onChangeMethodDelivery}
+          style={{ display: "flex", flexDirection: "column" }}
+          value={deliveryId}
+        >
+          <Radio value={1}>Giao tận nơi</Radio>
+          <Radio value={2}>Lấy tại cửa hàng</Radio>
+        </Radio.Group>
+      </div>
+    );
   };
 
   render() {
-    const { infoCart, checkout, defaultAddress, history, detailCoupon } = this.props;
-    const { tabPayment, note, isVisibleVoucher, couponId, isLogin } = this.state;
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const { isFetching, history, productsInCart, totalMoney, userDetail } =
+      this.props;
+    const { tabPayment, companyAddress, tax, companyName, deliveryId, isBLock } =
+      this.state;
 
     return (
-      <>
-        <main style={{ background: '#F5F5F5' }}>
-          {/* <Layout style={{ minHeight: '100vh' }}> */}
-          <Header
-            style={{
-              background: 'rgb(53, 153, 255) none repeat scroll 0% 0%',
-              fontSize: '16px',
-              fontWeight: 'bolder',
-              textAlign: 'center',
-              padding: '10px 20px 10px 10px',
-              height: '100%',
-            }}>
-            <Row>
-              <Col
-                span={12}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  fontFamily: 'Helvetica Neue',
-                  color: 'white',
-                  fontSize: '14px',
-                }}>
-                <div style={{ paddingRight: '20px' }}>Chào mừng bạn đến với cửa hàng sách Tri Thức</div>
-                <div>Liên hệ với chúng tôi: 123-456-789</div>
-              </Col>
-              <Col span={4} />
-              <Col span={8}>
-                {isLogin === false ? (
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      style={{ marginRight: '10px' }}
-                      onClick={() => {
-                        history.push('/register');
-                      }}>
-                      Đăng ký
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        history.push('/login');
-                      }}>
-                      Đăng nhập
-                    </Button>
+      <main style={{ background: "#F5F5F5" }}>
+        <ToastContainer />
+        <AppHeader isCartScreen={true} history={history} />
+
+        <div className="container" style={{ marginBottom: "50px" }}>
+          <div className="checkout-address-selection">
+            <div className="checkout-address-selection--draw" />
+
+            <div className="checkout-address-selection__container">
+              <div className="checkout-address-selection__section-header">
+                <i className="fa fa-map-marker" aria-hidden="true" />
+                <p>Địa Chỉ Nhận Hàng</p>
+              </div>
+              <div className="checkout-address-selection__selected-address-summary">
+                <div className="checkout-address-row">
+                  <div className="checkout-address-row__user-detail">
+                    {userDetail.id && userDetail.full_name} (+84){" "}
+                    {userDetail.id &&
+                      userDetail.phone.substring(1, userDetail.phone.length)}
+                  </div>
+                  <div className="checkout-address-row__address-summary">
+                    {userDetail.id &&
+                      `${userDetail.ward}, ${userDetail.district}, ${userDetail.province}`}
+                  </div>
+                  <div className="checkout-address-row__default-label">
+                    Mặc định
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="checkout-info-product">
+            {productsInCart && productsInCart.length > 0 && (
+              <Table
+                columns={columns}
+                dataSource={productsInCart}
+                pagination={false}
+                rowKey={(item) => `${item.id}`}
+              />
+            )}
+
+            <div className="checkout-note-ship">
+              <div className="checkout-note">
+                <div style={{ width: "100px" }}>Lời nhắn:</div>
+                <Input.TextArea
+                  rows={3}
+                  placeholder="Lưu ý cho Người bán..."
+                  onChange={this.onchangeNote}
+                />
+              </div>
+              <div className="checkout-ship">
+                <div style={{ color: "#00bfa5" }}>Phương thức vận chyển</div>
+
+                {deliveryId === 1 ? (
+                  <div>
+                    <p style={{ fontWeight: "600", margin: "0 0 8px 0" }}>
+                      Giao tận nơi
+                    </p>
+                    <p style={{ fontWeight: "400", margin: "0" }}>
+                      Giao hàng nhanh
+                    </p>
+                    <p style={{ color: "#888", margin: "0" }}>
+                      Nhận hàng sau 1 - 3 ngày
+                    </p>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <Avatar size="small" icon={<UserOutlined />} />
-                    <Dropdown overlay={menu}>
-                      <a className="ant-dropdown-link" style={{ display: 'flex', alignItems: 'center' }} onClick={(e) => e.preventDefault()} >
-                        {userInfo.nickname}
-                        <DownOutlined style={{ marginLeft: '5px', marginTop: '3px' }} />
-                      </a>
-                    </Dropdown>
+                  <div>
+                    <p style={{ fontWeight: "600", margin: "0 0 8px 0" }}>
+                      Lấy tại cửa hàng
+                    </p>
                   </div>
                 )}
-              </Col>
-            </Row>
-          </Header>
-
-          <div className="container" style={{ marginBottom: '50px' }}>
-            <div className="checkout-address-selection">
-              <div className="checkout-address-selection--draw" />
-
-              <div className="checkout-address-selection__container">
-                <div className="checkout-address-selection__section-header">
-                  <i className="fa fa-map-marker" aria-hidden="true" />
-                  <p>Địa Chỉ Nhận Hàng</p>
-                </div>
-                <div className="checkout-address-selection__selected-address-summary">
-                  <div className="checkout-address-row">
-                    <div className="checkout-address-row__user-detail">
-                      {defaultAddress.id && defaultAddress.name} (+84){' '}
-                      {defaultAddress.id && defaultAddress.phone.substring(2, defaultAddress.phone.length)}
-                    </div>
-                    <div className="checkout-address-row__address-summary">
-                      {defaultAddress.id &&
-                        `${defaultAddress.address}, ${defaultAddress.district}, ${defaultAddress.city}`}
-                    </div>
-                    <div className="checkout-address-row__default-label">Mặc định</div>
+                <Popover
+                  style={{ margin: "0px" }}
+                  content={this.renderChooseMethodDelivery}
+                  trigger="click"
+                  placement="left"
+                >
+                  <div
+                    style={{
+                      textTransform: "uppercase",
+                      color: "#05a",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Thay đổi
                   </div>
-                  <div className="checkout-address-selection__change-btn">Thay đổi</div>
-                </div>
+                </Popover>
               </div>
             </div>
 
-            <div className="checkout-info-product">
-              {infoCart && infoCart.id && (
-                <Table
-                  columns={columns}
-                  dataSource={infoCart.items}
-                  pagination={false}
-                  rowKey={(item) => `${item.id}`}
-                />
-              )}
+            <div className="total-money">
+              <div style={{ color: "#929292" }}>
+                Tổng số tiền ({productsInCart.length} sản phẩm):
+              </div>
+              <p style={{ marginLeft: "15px", color: "#ee4d2d" }}>
+                {numberToVnd(totalMoney)}
+              </p>
+            </div>
+          </div>
 
-              <div className="checkout-note-ship">
-                <div className="checkout-note">
-                  <div style={{ width: '100px' }}>Lời nhắn:</div>
-                  <Input.TextArea rows={3} placeholder="Lưu ý cho Người bán..." onChange={this.onchangeNote} />
-                </div>
-                <div className="checkout-ship">
-                  <div style={{ color: '#00bfa5' }}>Đơn vị vận chuyển</div>
-                  <div>
-                    <p style={{ fontWeight: '600', margin: '0 0 8px 0' }}>Vận Chuyển Nhanh</p>
-                    <p style={{ fontWeight: '400', margin: '0' }}>Shopee Express</p>
-                    <p style={{ color: '#888', margin: '0' }}>Nhận hàng vào 0 Th03 - 0 Th03</p>
+          <div className="checkout-payment">
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: "500",
+                marginBottom: "10px",
+              }}
+            >
+              Thông tin công ty
+            </div>
+            <div style={{ display: "flex" }}>
+              <div className="_2_JugQ">
+                <div className="input-with-validator-wrapper">
+                  <div className="input-with-validator">
+                    <input
+                      type="text"
+                      placeholder="Nhập tên công ty"
+                      maxLength="100"
+                      value={companyName}
+                      onChange={this.onChangeCompanyName}
+                    />
                   </div>
-                  <div style={{ textTransform: 'uppercase', color: '#05a', cursor: 'pointer' }}>Thay đổi</div>
-                  <div style={{ color: 'black' }}>{numberToVnd(infoCart.shipping && infoCart.shipping)}</div>
                 </div>
               </div>
-
-              <div className="total-money">
-                <div style={{ color: '#929292' }}>
-                  Tổng số tiền ({infoCart && infoCart.items && infoCart.items.length} sản phẩm):
+              <div className="_2_JugQ">
+                <div className="input-with-validator-wrapper">
+                  <div className="input-with-validator">
+                    <input
+                      type="number"
+                      placeholder="Nhập mã số thuế"
+                      maxLength="12"
+                      value={tax}
+                      onChange={this.onChangeCompanyTax}
+                    />
+                  </div>
                 </div>
-                <p style={{ marginLeft: '15px', color: '#ee4d2d' }}>{numberToVnd(infoCart.total && infoCart.total)}</p>
               </div>
-            </div>
-
-            <div className="checkout-voucher">
-              <div className="checkout-voucher__left">
-                <div style={{ width: '30px', marginRight: '15px' }}>
-                  <Voucher />
-                </div>
-                <div style={{ fontWeight: '400', fontSize: '18px' }}>Mã giảm giá</div>
-              </div>
-              <div className="checkout-voucher__right">
-                <div>
-                  Đã chọn <span style={{ color: '#ee4d2d' }}>1</span> mã (-20.000d)
-                </div>
-                {/* <div style={{ color: '#05a', fontWeight: '500' }}>Chọn Voucher</div> */}
-                <div
-                  style={{ color: '#05a', fontWeight: '500', marginLeft: '25px' }}
-                  onClick={() => this.setState({ isVisibleVoucher: true })}>
-                  THAY ĐỔI
+              <div className="_2_JugQ">
+                <div className="input-with-validator-wrapper">
+                  <div className="input-with-validator">
+                    <input
+                      type="text"
+                      placeholder="Nhập địa chỉ công ty"
+                      maxLength="100"
+                      value={companyAddress}
+                      onChange={this.onChangeCompanyAddress}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="checkout-payment">
-              <div style={{ fontSize: '16px', fontWeight: '500', marginBottom: '10px' }}>Phương thức thanh toán</div>
+          <div className="checkout-payment">
+            <div
+              style={{
+                fontSize: "16px",
+                fontWeight: "500",
+                marginBottom: "10px",
+              }}
+            >
+              Phương thức thanh toán
+            </div>
 
-              <Tabs onChange={this.onChangeKeyTab} type="card">
-                <TabPane tab="Thanh toán khi nhận hàng" key="1">
-                  <div style={{ margin: '15px' }}>Thanh toán khi nhận hàng</div>
-                </TabPane>
-                <TabPane tab="Thẻ" key="2">
-                  {defaultAddress.id && (
+            <Tabs onChange={this.onChangeKeyTab} type="card">
+              <TabPane tab="Thanh toán khi nhận hàng" key="1">
+                <div style={{ margin: "15px" }}>Thanh toán khi nhận hàng</div>
+              </TabPane>
+              <TabPane tab="Thẻ" key="2">
+                {/* {defaultAddress.id && (
                     <PayWithPayPal
                       infoCart={infoCart}
                       checkout={checkout}
@@ -325,113 +406,64 @@ class Checkout extends Component {
                       note={note}
                       history={history}
                     />
-                  )}
-                </TabPane>
-              </Tabs>
+                  )} */}
+              </TabPane>
+            </Tabs>
 
-              <div className="payment-grand-total">
-                <div style={{ width: '30%' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>Tiền sách</div>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>{numberToVnd(infoCart.subtotal)}</div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>Phí vận chuyển</div>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>+{numberToVnd(infoCart.shipping)}</div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>Giảm giá từ sách</div>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>-{numberToVnd(infoCart.item_discount)}</div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>Giảm giá từ mã giảm giá</div>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>-{numberToVnd(infoCart.discount)}</div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ color: 'rgba(0,0,0,.54)' }}>Tổng thanh toán:</div>
-                    <div style={{ color: '#ee4d2d', fontSize: '20px', fontWeight: '600', marginTop: '10px' }}>
-                      {numberToVnd(infoCart.grand_total)}
-                    </div>
-                  </div>
-                </div>
+            {tabPayment === "1" ? (
+              <div
+                style={{
+                  margin: "20px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <button
+                  disabled={isBLock ? true : false}
+                  className="btn-payment"
+                  onClick={this.onCheckout}
+                >
+                  Đặt hàng
+                </button>
               </div>
-
-              {tabPayment === '1' ? (
-                <div style={{ margin: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button className="btn-payment" onClick={() => this.onCheckout()}>
-                    Đặt hàng
-                  </button>
-                </div>
-              ) : null}
-            </div>
+            ) : null}
           </div>
+        </div>
 
-          <AppFooter />
-          {/* </Layout> */}
-          <Modal closable={false} title="Chọn mã giảm giá" visible={isVisibleVoucher} footer={null}>
-            <div className="modal-voucher">
-              <div className="voucher-input">
-                <div className="voucher-input__text">Mã Voucher</div>
-                <div className="voucher-input__input">
-                  <Input placeholder="Mã Voucher" onChange={this.onChangeCoupon} />
-                </div>
-                <div className="voucher-input__button">
-                  <Button disabled={couponId && couponId.length > 0 ? false : true} onClick={this.getDetailCoupon}>
-                    Áp Dụng
-                  </Button>
-                </div>
-              </div>
-              <div className="voucher-content">
-                {detailCoupon && detailCoupon.code ? (
-                  <VoucherItem />
-                ) : (
-                  <>
-                    <VoucherEmpty />
-                    <h3 style={{ color: 'rgba(0,0,0,.65)', margin: '15px 0', lineHeight: '13px', textAlign: 'center' }}>
-                      Không tìm thấy mã giảm giá nào trong mục Ví Voucher của bạn
-                    </h3>
-                    <p
-                      style={{
-                        color: 'rgba(0,0,0,.65)',
-                        margin: '15px 0',
-                        lineHeight: '13px',
-                        textAlign: 'center',
-                        fontSize: '14px',
-                      }}>
-                      Không tìm thấy mã giảm giá nào trong mục Ví Voucher của bạn. Hãy bắt đầu lưu voucher từ những
-                      trang chương trình khuyến mãi nhé!
-                    </p>
-                    <div style={{ width: '100%', marginTop: '20px' }}>
-                      <Button
-                        style={{ float: 'right', background: '#fa5e4e', color: 'white' }}
-                        onClick={() => this.setState({ isVisibleVoucher: false })}>
-                        OK
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </Modal>
-        </main>
-      </>
+        <AppFooter />
+        {isFetching && (
+          <div
+            style={{
+              backgroundColor: "rgba(0,0,0,0.3)",
+              position: "absolute",
+              top: "0",
+              left: "0",
+              right: "0",
+              bottom: "0",
+              zIndex: 11,
+              height: "200vh",
+            }}
+          >
+            <Loading />
+          </div>
+        )}
+      </main>
     );
   }
 }
 
-const mapStateToProps = ({ cartReducer, authReducer, couponReducer }) => ({
+const mapStateToProps = ({ cartReducer, authReducer }) => ({
   infoCart: cartReducer.infoCart,
   isFetching: cartReducer.isFetching,
   listAddressUser: authReducer.listAddressUser,
-  defaultAddress: authReducer.defaultAddress,
-  detailCoupon: couponReducer.detailCoupon,
+  userDetail: authReducer.userDetail,
+  productsInCart: cartReducer.productsInCart,
+  totalMoney: cartReducer.totalMoney,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getCart: (meta) => dispatch(cartActions.getCart(meta)),
   checkout: (payload, meta) => dispatch(cartActions.checkout(payload, meta)),
-  getAddressUser: () => dispatch(authActions.getAddressUser()),
-  getDetailCoupon: (couponId, meta) => dispatch(couponActions.getDetailCoupon(couponId, meta)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

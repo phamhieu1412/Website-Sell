@@ -1,60 +1,94 @@
-import React, { useState } from "react";
-import Slider from "react-slick";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import "../css/SlideProductCss.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import image4 from "../assets/images/JBLHorizon_001_dvHAMaster.png";
+import {
+  numberToVnd,
+  notificationToast,
+  successNotificationToast,
+} from "../utils/numberFormatter";
+import { actions as productsActions } from "../redux/productsRedux";
+import { actions as cartActions } from "../redux/cartRedux";
 
 const ListProduct = (props) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    autoplay: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
+  const dispatch = useDispatch();
+  const productsReducer = useSelector((state) => state.productsReducer);
+  const { listProducts } = productsReducer;
+  const { history } = props;
+
+  const addToCart = (id) => {
+    dispatch(
+      cartActions.addToCart(
+        {
+          product_id: id,
+          quantity: 1,
+        },
+        {
+          onSuccess: () => {
+            successNotificationToast("Thêm sản phẩm vào giỏ thành công");
+          },
+          onFailure: (textError) => {
+            notificationToast("Thêm sản phẩm vào giỏ thất bại");
+          },
+        }
+      )
+    );
   };
 
   return (
-    <div class="section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Latest product</h2>
+    <div className="section">
+      <div className="container">
+        <div className="section-header">
+          <h2>Tất cả sản phẩm</h2>
         </div>
-        <div class="row" id="latest-products">
-          <div class="col-3 col-md-6 col-sm-12">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src={image4} alt="" />
-                <img src={image4} alt="" />
-              </div>
-              <div class="product-card-info">
-                <div class="product-btn">
-                  <button class="btn-flat btn-hover btn-shop-now">
-                    shop now
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-cart-add"></i>
-                  </button>
-                  <button class="btn-flat btn-hover btn-cart-add">
-                    <i class="bx bxs-heart"></i>
-                  </button>
+        <div className="row" id="latest-products">
+          {listProducts.map((item) => (
+            <div key={item.id} className="col-3 col-md-6 col-sm-12">
+              <div className="product-card">
+                <div className="product-card-img">
+                  <img src={item.avatar_url} alt="" />
+                  <img src={item.avatar_url} alt="" />
                 </div>
-                <div class="product-card-name">JBL Quantum 400</div>
-                <div class="product-card-price">
-                  <span>
-                    <del>$300</del>
-                  </span>
-                  <span class="curr-price">$200</span>
+                <div className="product-card-info">
+                  <div className="product-btn">
+                    <button
+                      className="btn-flat btn-hover btn-shop-now"
+                      onClick={() => {
+                        history.push(`/detail/${item.link_seo}/${item.id}`);
+                        dispatch(productsActions.getDetailProduct(item.id));
+                      }}
+                    >
+                      Xem ngay
+                    </button>
+                    <button
+                      className="btn-flat btn-hover btn-cart-add"
+                      onClick={() => addToCart(item.id)}
+                    >
+                      <i className="bx bxs-cart-add"></i>
+                    </button>
+                    <button className="btn-flat btn-hover btn-cart-add">
+                      <i className="bx bxs-heart"></i>
+                    </button>
+                  </div>
+                  <div className="product-card-name">{item.name}</div>
+                  <div className="product-card-price">
+                    <span>
+                      <del>{numberToVnd(item.price)}</del>
+                    </span>
+                    <span className="curr-price">
+                      {numberToVnd(item.final_price)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-        <div class="section-footer">
-          <a href="./products.html" class="btn-flat btn-hover">
-            view all
+        <div className="section-footer">
+          <a
+            onClick={() => history.push("/search")}
+            className="btn-flat btn-hover"
+          >
+            Xem thêm
           </a>
         </div>
       </div>

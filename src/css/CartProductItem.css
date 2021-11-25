@@ -1,58 +1,110 @@
-
 /* card-product-item in productcart.js in actionPage in page*/
 
-/* .card-product-item {
-    width: 200px;
-    height: auto;
-    border: 1px solid;
-    padding: 10px;
-    margin-bottom: 20PX;
+.card-product-item {
+  width: 200px;
+  height: auto;
+  border: 1px solid;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 .card-product-item .price {
-    color: red;
+  color: red;
 }
 .card-product-item .selled {
-    float: right;
+  float: right;
 }
 
 .section .waves-effect.waves-light {
-    font-size: 65%;
+  font-size: 65%;
 }
 
 .nav-fixed {
-    position: fixed;
-    z-index: 90;
-    width: 100%;
-} */
+  position: fixed;
+  z-index: 90;
+  width: 100%;
+}
 .section .product-table tbody:first-child {
-    background-color: #acacac;
+  background-color: #acacac;
 }
 .section .product-table tr th {
-    font-size: 1.2em;
-    text-align: center;
-    vertical-align: middle;
+  font-size: 1.2em;
+  text-align: center;
+  vertical-align: middle;
 }
 .section .product-table tr .center-on-small-only {
-    text-align: center;
+  text-align: center;
+}
+.section .product-table tr .center-on-small-only .btn-group-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.section
+  .product-table
+  tr
+  .center-on-small-only
+  .btn-group-action
+  .label-btn-group:hover,
+.section .product-table td .btn-delete-item:hover {
+  background-color: #4d84e2;
+}
+.section
+  .product-table
+  tr
+  .center-on-small-only
+  .btn-group-action
+  .label-btn-group,
+.section .product-table td .btn-delete-item {
+  background-color: #5a94fd;
+  padding: 5px 20px;
+  border-radius: 20px;
+  margin: 0 3px;
+  border: none;
+  outline: none;
+  color: white;
+}
+.section
+.product-table
+tr
+.center-on-small-only
+.btn-group-action
+.label-btn-group p {
+  margin: 0px;
+}
+.section
+  .product-table
+  tr
+  .center-on-small-only
+  .btn-group-action
+  .label-btn-group
+  a {
+  color: white;
 }
 .section .product-table tr td span {
-    color:red;
-    font-size: 18px;
-    padding: 10px;
-    font-weight: 600;
-} 
-.section .product-table tr td h6 {
-    font-size: 16px;
-    color: red;
-    font-weight: 700;
-    text-align: center;   
+  color: red;
+  font-size: 18px;
+  padding: 10px;
+  font-weight: 600;
+}
+.section .product-table tr td .price {
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: line-through;
+  text-align: right;
+}
+.section .product-table tr td .final-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: right;
 }
 .section .product-table tbody .th-2 {
-    width: 40%;
+  width: 20%;
+  padding: 10px 0;
 }
 
 @media (max-width: 768px) {
-    .section .product-table tbody .th-2 {
-        width: 20%;
-    }
+  .section .product-table tbody .th-2 {
+    width: 20%;
+  }
 }

@@ -35,3 +35,23 @@
     border-left: 1px dotted #898989;
   }
 }
+
+.voucher-introduction {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+
+  .block-voucher-introduction {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: center;
+
+    .img-voucher {
+      height: 180px;
+    }
+    .ml-10 {
+      margin-left: 10px;
+    }
+  }
+}
