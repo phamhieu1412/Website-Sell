@@ -35,6 +35,11 @@ class Header extends Component {
           }
         },
       });
+    } else {
+      getUserInfo({
+        onSuccess: () => {},
+        onFailure: () => {},
+      });
     }
   }
 
@@ -48,7 +53,10 @@ class Header extends Component {
   };
 
   renderUserContent = () => {
-    const { userDetail, history } = this.props;
+    const { userDetail, history, isFetching } = this.props;
+    if (isFetching) {
+      return;
+    }
     if (userDetail && userDetail.id) {
       return (
         <div className="render-user-content">
@@ -90,6 +98,7 @@ class Header extends Component {
       meta,
       listMenu,
       getSearchProducts,
+      isFetching,
     } = this.props;
     const { keyword } = this.state;
     let listMenuPublic = [];
@@ -288,6 +297,7 @@ class Header extends Component {
 
 const mapStateToProps = ({ authReducer, appReducer, productsReducer }) => ({
   userDetail: authReducer.userDetail,
+  isFetching: authReducer.isFetching,
   listMenu: appReducer.menu,
   flagGetMenu: appReducer.flagGetMenu,
   meta: productsReducer.meta,
