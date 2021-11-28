@@ -2,6 +2,13 @@ import React, { Component } from "react";
 import OtpInput from "react-otp-input";
 import { connect } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import {
+  LinkedinOutlined,
+  GooglePlusOutlined,
+  TwitterOutlined,
+  FacebookOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 import { actions as authActions } from "../redux/authRedux";
 import { isVietnamesePhoneNumber } from "../utils/numberFormatter";
@@ -187,7 +194,7 @@ class LoginPage extends Component {
               <h2 className="title">Đăng nhập</h2>
               {showInputPhoneUI && (
                 <div className="input-field">
-                  <i className="fas fa-user"></i>
+                  <i></i>
                   <input
                     type="text"
                     placeholder="Nhập số điện thoại"
@@ -232,30 +239,32 @@ class LoginPage extends Component {
                 </button>
               )}
 
-              <p className="social-text">Or Sign in with social platforms</p>
+              <p className="social-text">
+                Đăng nhập với trên các nền tảng khác
+              </p>
               <div className="social-media">
                 <a href="#" className="social-icon">
-                  <i className="fab fa-facebook-f"></i>
+                  <FacebookOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-twitter"></i>
+                  <TwitterOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-google"></i>
+                  <GooglePlusOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-linkedin-in"></i>
+                  <LinkedinOutlined />
                 </a>
               </div>
             </div>
 
             {/* content signup */}
             <div className="div-change-content sign-up-form">
-              <h2 className="title">Sign up</h2>
+              <h2 className="title">Đăng ký</h2>
               {showInputPhoneUI && (
                 <>
                   <div className="input-field">
-                    <i className="fas fa-user"></i>
+                    <i />
                     <input
                       type="text"
                       placeholder="Nhập số điện thoại"
@@ -264,7 +273,7 @@ class LoginPage extends Component {
                     />
                   </div>
                   <div className="input-field">
-                    <i className="fas fa-envelope"></i>
+                    <i />
                     <input
                       type="text"
                       placeholder="Nhập họ và tên"
@@ -308,19 +317,19 @@ class LoginPage extends Component {
                   Đăng ký
                 </button>
               )}
-              <p className="social-text">Or Sign up with social platforms</p>
+              <p className="social-text">Đăng ký với các nền tảng khác</p>
               <div className="social-media">
                 <a href="#" className="social-icon">
-                  <i className="fab fa-facebook-f"></i>
+                  <FacebookOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-twitter"></i>
+                  <TwitterOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-google"></i>
+                  <GooglePlusOutlined />
                 </a>
                 <a href="#" className="social-icon">
-                  <i className="fab fa-linkedin-in"></i>
+                  <LinkedinOutlined />
                 </a>
               </div>
             </div>
@@ -330,34 +339,30 @@ class LoginPage extends Component {
         <div className="panels-container">
           <div className="panel left-panel">
             <div className="content">
-              <h3>New here ?</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Debitis, ex ratione. Aliquid!
-              </p>
+              <h3>Chưa có tài khoản ?</h3>
+              <p>Tiến hành đăng ký để mua hàng ngay thôi!!!</p>
               <button
                 className="btn transparent"
                 id="sign-up-btn"
                 onClick={() => this.changeId(1)}
               >
-                Sign up
+                Đăng ký
               </button>
             </div>
             <img src="img/log.svg" className="image" alt="" />
           </div>
           <div className="panel right-panel">
             <div className="content">
-              <h3>One of us ?</h3>
+              <h3>Đăng ký?</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                laboriosam ad deleniti.
+                Đăng ký rồi thì đăng nhập thôi nào!!!
               </p>
               <button
                 className="btn transparent"
                 id="sign-in-btn"
                 onClick={() => this.changeId(2)}
               >
-                Sign in
+                Đăng nhập
               </button>
             </div>
             <img src="img/register.svg" className="image" alt="" />
