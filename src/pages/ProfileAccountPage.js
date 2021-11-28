@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import AppFooter from "../layout/Footer";
 import AppHeader from "../layout/Header";
 import Account from "../components/Account";
+import Loading from "../components/Loading";
 import { actions as authActions } from "../redux/authRedux";
 import { actions as orderActions } from "../redux/orderRedux";
 
@@ -45,7 +46,7 @@ class ProfileAccountPage extends Component {
 
   render() {
     const { isLogin } = this.state;
-    const { infoCart, userDetail } = this.props;
+    const { infoCart, userDetail, isFetching } = this.props;
 
     return (
       <Layout style={{ minHeight: "100vh" }}>
@@ -59,6 +60,21 @@ class ProfileAccountPage extends Component {
 
         <ToastContainer />
         <AppFooter />
+        {isFetching && (
+          <div
+            style={{
+              backgroundColor: "rgba(0,0,0,0.3)",
+              position: "absolute",
+              top: "0",
+              left: "0",
+              right: "0",
+              bottom: "0",
+              zIndex: 11,
+            }}
+          >
+            <Loading />
+          </div>
+        )}
       </Layout>
     );
   }
@@ -66,6 +82,7 @@ class ProfileAccountPage extends Component {
 
 const mapStateToProps = ({ authReducer }) => ({
   userDetail: authReducer.userDetail,
+  isFetching: authReducer.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({

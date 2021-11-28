@@ -38,7 +38,6 @@ export const actions = {
     const api = API_URLS.CART.getCart();
     const { response } = await apiCall(api);
 
-    console.log("xx cart", response);
     if (
       response?.status === 200 &&
       response.data.message.status === "success"
@@ -58,7 +57,6 @@ export const actions = {
     const api = API_URLS.CART.updateQuantity(payload, cart_item_id);
     const { response } = await apiCall(api);
 
-    console.log("xx qupdate cart", response);
     if (
       response.status === 200 &&
       response?.data?.message?.status === "success"

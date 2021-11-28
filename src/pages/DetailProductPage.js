@@ -73,11 +73,11 @@ const DetailProductPage = (props) => {
           <div className="container">
             <div className="box" style={{ marginTop: "20px" }}>
               <div className="breadcumb">
-                <a href="./index.html">home</a>
+                <a onClick={() => history.push("/home")}>home</a>
                 <span>
                   <i className="bx bxs-chevrons-right"></i>
                 </span>
-                <a href="./products.html">all products</a>
+                <a onClick={() => history.push("/search")}>all products</a>
                 <span>
                   <i className="bx bxs-chevrons-right"></i>
                 </span>

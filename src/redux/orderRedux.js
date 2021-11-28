@@ -79,7 +79,6 @@ export const actions = {
     const api = API_URLS.ORDER.getOrderDetail(id);
     const { response } = await apiCall(api);
 
-    console.log("xxx response", response);
     if (
       response?.status === 200 &&
       response.data &&
@@ -101,7 +100,6 @@ export const actions = {
     const api = API_URLS.ORDER.deleteOrderDetail(id, payload);
     const { response } = await apiCall(api);
 
-    console.log("xxx response", response);
     if (
       response?.status === 200 &&
       response.data &&

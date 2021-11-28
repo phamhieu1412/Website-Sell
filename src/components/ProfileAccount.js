@@ -64,7 +64,6 @@ function ProfileAccount(props) {
   }, []);
 
   const onChangeGender = (e) => {
-    console.log("radio checked", e.target.value);
     setGender(e.target.value);
     setInfoUser({ ...infoUser, gender: e.target.value });
   };

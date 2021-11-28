@@ -10,7 +10,7 @@ import ProductsAfterFilter from "../components/ProductsAfterFilter";
 import { actions as productsActions } from "../redux/productsRedux";
 import { actions as appActions } from "../redux/appRedux";
 
-const SearchProductPage = (props) => {
+const SearchProductPage = ({history}) => {
   const dispatch = useDispatch();
   const appReducer = useSelector((state) => state.appReducer);
   const productsReducer = useSelector((state) => state.productsReducer);
@@ -178,18 +178,18 @@ const SearchProductPage = (props) => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <AppHeader history={props.history} />
+      <AppHeader history={history} />
 
       <div className="bg-main">
         <div className="container">
           {!isFetching && (
             <div className="box box-header-filter">
               <div className="breadcumb">
-                <a href="./index.html">home</a>
+                <a onClick={() => history.push("/home")}>home</a>
                 <span>
                   <i className="bx bxs-chevrons-right"></i>
                 </span>
-                <a href="./products.html">all products</a>
+                <a href="./home">all products</a>
               </div>
               <div className="params-filter-select">
                 <Dropdown
@@ -212,8 +212,8 @@ const SearchProductPage = (props) => {
               </div>
             </div>
           )}
-          <div class="box">
-            <div class="row">
+          <div className="box">
+            <div className="row">
               <FilterByParams listFilter={listFilter} />
 
               <ProductsAfterFilter />

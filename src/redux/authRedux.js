@@ -152,7 +152,7 @@ export const actions = {
     type: TYPE.GET_INFO_USER,
     meta: { prefix: [AUTH, API_CALLED_FAILURE] },
   }),
-  getUserInfo: () => async (dispatch) => {
+  getUserInfo: (meta) => async (dispatch) => {
     dispatch(actions.gettingInfoUser());
     const api = API_URLS.USER.getUserInfo();
     const { response, status } = await apiCall(api);
@@ -166,13 +166,18 @@ export const actions = {
       if (status === "success") {
         const data = response.data.data;
         dispatch(actions.getInfoUserSuccess(data));
+        meta.onSuccess();
       } else {
         dispatch(actions.getInfoUserFailure());
+        meta.onFailure();
       }
-    } else if (status && status === 401) {
+    } else if (status && (status === 401 || status === 422)) {
       dispatch(actions.logOut());
+      meta.onFailure(status);
+      dispatch(actions.getInfoUserFailure());
     } else {
       dispatch(actions.getInfoUserFailure());
+      meta.onFailure();
     }
   },
 

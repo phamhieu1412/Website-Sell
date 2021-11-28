@@ -27,13 +27,13 @@ class Root extends Component {
         <BrowserRouter basename="/">
           <Switch>
             <Route extract path="/home" component={App} />
-            <Route extract path="/account/profile" component={ProfileAccountPage} />
-            <Route extract path="/login" component={LoginPage} />
-            <Route extract path="/search" component={SearchProductPage} />
-            <Route path="/cart" component={CartPage} />
-            <Route path="/checkout" component={CheckoutPage} />
+            <Route path="/search" component={SearchProductPage} />
             <Route path="/category/:id" component={SearchProductPage} />
             <Route path="/detail/:link/:id" component={DetailProductPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/account/profile" component={ProfileAccountPage} />
+            <Route path="/cart" component={CartPage} />
+            <Route path="/checkout" component={CheckoutPage} />
             {/* <Route path="/dashboard" component={Dashboard} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />

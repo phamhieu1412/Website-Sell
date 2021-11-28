@@ -99,7 +99,6 @@ export const actions = {
     const api = API_URLS.PRODUCTS.getSearchProducts(payload);
     const { response } = await apiCall(api);
 
-    console.log("xxx 1", response);
     if (
       response &&
       response.status === 200 &&

@@ -7,7 +7,7 @@ import { actions as productsActions } from "./redux/productsRedux";
 
 class App extends Component {
   componentDidMount() {
-    const { getBanners, getProductsBestSeller, getProductsByFilters } =
+    const { getBanners, getProductsBestSeller, getProductsByFilters, } =
       this.props;
     getBanners();
     getProductsBestSeller({

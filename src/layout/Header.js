@@ -19,15 +19,23 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    const { history } = this.props;
-    const token = localStorage.getItem("token");
+    const { history, getMenu, getUserInfo } = this.props;
+    const url = `${window.location.href}`;
+    const urlCart = url.indexOf("cart");
+    const urlCheckout = url.indexOf("checkout");
+    const urlProfile = url.indexOf("account/profile");
 
-    if (token && token.length > 0) {
-      this.props.getUserInfo();
-    } else {
-      history.push("/login");
+    getMenu();
+    if (urlCart !== -1 || urlCheckout !== -1 || urlProfile !== -1) {
+      getUserInfo({
+        onSuccess: () => {},
+        onFailure: (status) => {
+          if (status && (status === 401 || status === 422)) {
+            history.push("/login");
+          }
+        },
+      });
     }
-    this.props.getMenu();
   }
 
   goToCart = () => {
@@ -231,7 +239,7 @@ class Header extends Component {
                     ))}
 
                   <li className="mega-dropdown">
-                    <a href="./products.html">
+                    <a href="">
                       Xem thêm <i className="bx bxs-chevron-down"></i>
                     </a>
                     <div className="mega-content">
@@ -287,7 +295,7 @@ const mapStateToProps = ({ authReducer, appReducer, productsReducer }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logOut: () => dispatch(authActions.logOut()),
-  getUserInfo: () => dispatch(authActions.getUserInfo()),
+  getUserInfo: (meta) => dispatch(authActions.getUserInfo(meta)),
   getProductsByFilters: (payload) =>
     dispatch(productsActions.getProductsByFilters(payload)),
   getSearchProducts: (payload) =>
