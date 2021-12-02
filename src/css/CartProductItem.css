@@ -107,4 +107,8 @@ tr
   .section .product-table tbody .th-2 {
     width: 20%;
   }
+  .table-responsive {
+    overflow: scroll;
+  }
 }
+/* @media only screen and (max-width: 750px) { */

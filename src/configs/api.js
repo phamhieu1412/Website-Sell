@@ -1,4 +1,4 @@
-export const url = "http://5a52-210-245-54-40.ngrok.io";
+export const url = "http://3197-210-245-54-40.ngrok.io";
 
 export const HEADERS = {
   default_header: () => ({

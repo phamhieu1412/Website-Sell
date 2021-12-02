@@ -12,8 +12,6 @@ function VoucherHome() {
       <div className="block-voucher-introduction">
         <img className="img-voucher" src={img1} alt="voucher 1" />
         <img className="img-voucher ml-10" src={img2} alt="voucher 2" />
-      </div>
-      <div className="block-voucher-introduction">
         <img className="img-voucher" src={img3} alt="voucher 3" />
         <img className="img-voucher ml-10" src={img4} alt="voucher 4" />
       </div>

@@ -15,6 +15,7 @@ class Header extends Component {
     this.state = {
       currentCategoryId: 1,
       keyword: "",
+      classActive: "header-wrapper",
     };
   }
 
@@ -90,6 +91,13 @@ class Header extends Component {
     this.setState({ keyword: e.target.value });
   };
 
+  openSubMenu = () => {
+    this.setState({ classActive: "header-wrapper active" });
+  };
+  closeSubMenu = () => {
+    this.setState({ classActive: "header-wrapper" });
+  };
+
   render() {
     const {
       userDetail,
@@ -100,7 +108,7 @@ class Header extends Component {
       getSearchProducts,
       isFetching,
     } = this.props;
-    const { keyword } = this.state;
+    const { keyword, classActive } = this.state;
     let listMenuPublic = [];
     let listMenuPrivate = [];
 
@@ -112,19 +120,29 @@ class Header extends Component {
         listMenuPrivate.push(listMenu[j]);
       }
     }
+
+    // header-wrapper active
     return (
       <header>
         <div className="mobile-menu bg-second">
           <a onClick={() => history.push("/home")} className="mb-logo">
             ATShop
           </a>
-          <span className="mb-menu-toggle" id="mb-menu-toggle">
+          <span
+            className="mb-menu-toggle"
+            id="mb-menu-toggle"
+            onClick={this.openSubMenu}
+          >
             <i className="bx bx-menu"></i>
           </span>
         </div>
 
-        <div className="header-wrapper" id="header-wrapper">
-          <span className="mb-menu-toggle mb-menu-close" id="mb-menu-close">
+        <div className={classActive} id="header-wrapper">
+          <span
+            className="mb-menu-toggle mb-menu-close"
+            id="mb-menu-close"
+            onClick={this.closeSubMenu}
+          >
             <i className="bx bx-x"></i>
           </span>
 
@@ -187,7 +205,7 @@ class Header extends Component {
               <div className="search">
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Bạn cần tìm gì ...?"
                   onChange={this.onChangeKeyword}
                 />
                 <i

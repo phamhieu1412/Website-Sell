@@ -95,6 +95,7 @@ const initialState = {
   isFetching: false,
   menu: [],
   banners: [],
+  bannersName: [],
 };
 
 export const reducer = produce((draft, action) => {
@@ -118,8 +119,14 @@ export const reducer = produce((draft, action) => {
         draft.isFetching = true;
       }
       if (isSuccessfulApiCall(action)) {
+        const arrayBanners = action.payload;
+        let arr = [];
         draft.isFetching = false;
         draft.banners = action.payload;
+        for (let i = 0; i < arrayBanners.length; i++) {
+          arr.push(arrayBanners[i].name);
+        }
+        draft.bannersName = arr;
       }
       if (isFailedApiCall(action)) {
         draft.isFetching = false;
